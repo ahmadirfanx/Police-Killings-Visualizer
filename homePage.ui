@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
-    <height>478</height>
+    <width>610</width>
+    <height>447</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,7 +53,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Monthly Killings comparison</string>
+       <string>Deaths graph for the year :</string>
       </property>
      </widget>
      <widget class="QPushButton" name="button2">
@@ -237,6 +237,26 @@
       <property name="text">
        <string>Signs of Mental illness</string>
       </property>
+     </widget>
+     <widget class="QComboBox" name="yearSelector1">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>30</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>15</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>16</string>
+       </property>
+      </item>
      </widget>
     </widget>
     <widget class="QWidget" name="tab">
@@ -480,19 +500,19 @@
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>Additional tests</string>
+      <string>T-test</string>
      </attribute>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="TtestBtn">
       <property name="geometry">
        <rect>
-        <x>340</x>
+        <x>220</x>
         <y>230</y>
-        <width>111</width>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>View Stats</string>
+       <string>Perform T-test</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_2">
@@ -503,23 +523,39 @@
        <rect>
         <x>30</x>
         <y>30</y>
-        <width>211</width>
+        <width>321</width>
         <height>41</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <family>Avenir</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>Select the desired data to find:</string>
+       <string>Select values to perform T-test Hypothesis testing:</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_2">
+     <widget class="QComboBox" name="comboYear">
       <property name="geometry">
        <rect>
-        <x>240</x>
+        <x>110</x>
         <y>90</y>
         <width>104</width>
         <height>26</height>
        </rect>
       </property>
+      <item>
+       <property name="text">
+        <string>2015</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2016</string>
+       </property>
+      </item>
      </widget>
      <widget class="QLabel" name="label_13">
       <property name="enabled">
@@ -527,14 +563,14 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>150</x>
+        <x>20</x>
         <y>80</y>
         <width>81</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Mean</string>
+       <string>Year :</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_14">
@@ -543,25 +579,85 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>110</y>
+        <x>220</x>
+        <y>80</y>
         <width>81</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Median</string>
+       <string>Month :</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_5">
+     <widget class="QComboBox" name="comboMonth">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>120</y>
+        <x>310</x>
+        <y>90</y>
         <width>104</width>
         <height>26</height>
        </rect>
       </property>
+      <item>
+       <property name="text">
+        <string>January</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>February</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>March</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>April</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>May</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>June</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>July</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>August</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>September</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>October</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>November</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>December</string>
+       </property>
+      </item>
      </widget>
      <widget class="QLabel" name="label_15">
       <property name="enabled">
@@ -569,25 +665,85 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>130</y>
+        <x>20</x>
+        <y>120</y>
         <width>81</width>
         <height>61</height>
        </rect>
       </property>
       <property name="text">
-       <string>Max</string>
+       <string>Year :</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_6">
+     <widget class="QComboBox" name="comboMonth2">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>180</y>
+        <x>310</x>
+        <y>140</y>
         <width>104</width>
         <height>26</height>
        </rect>
       </property>
+      <item>
+       <property name="text">
+        <string>January</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>February</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>March</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>April</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>May</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>June</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>July</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>August</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>September</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>October</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>November</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>December</string>
+       </property>
+      </item>
      </widget>
      <widget class="QLabel" name="label_16">
       <property name="enabled">
@@ -595,30 +751,85 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>180</y>
+        <x>220</x>
+        <y>140</y>
         <width>81</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>Min</string>
+       <string>Month :</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_7">
+     <widget class="QComboBox" name="comboYear2">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>150</y>
+        <x>110</x>
+        <y>140</y>
         <width>104</width>
         <height>26</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>2015</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2016</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>50</y>
+        <width>321</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Avenir</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Note: Hypothessis 0 is always the null situation.</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="TtestGraphBtn">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>190</y>
+        <width>171</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>View Comparison Graph</string>
+      </property>
+     </widget>
+     <widget class="QPlainTextEdit" name="textEdit1">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>260</y>
+        <width>421</width>
+        <height>41</height>
        </rect>
       </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
-      <string>Probability</string>
+      <string>ANOVA</string>
      </attribute>
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
@@ -660,50 +871,6 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_4">
-     <attribute name="title">
-      <string>Variance</string>
-     </attribute>
-     <widget class="QPushButton" name="pushButton_4">
-      <property name="geometry">
-       <rect>
-        <x>300</x>
-        <y>80</y>
-        <width>111</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>View Stats</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_4">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>30</y>
-        <width>311</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select the desired data to find the Mean.</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="comboBox_4">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>80</y>
-        <width>104</width>
-        <height>26</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -711,7 +878,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>630</width>
+     <width>610</width>
      <height>22</height>
     </rect>
    </property>

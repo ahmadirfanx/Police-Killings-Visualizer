@@ -10,10 +10,14 @@ from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QLabel, QComboBox, QPushButton
 from PyQt5.QtGui import QPainter, QPen
 from PyQt5 import QtGui
+from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
-matplotlib.use('Qt5Agg')
+from scipy import stats
+from scipy.stats import ttest_ind
 
 class Ui(QtWidgets.QMainWindow):
+    months=['January','February','March','April','May','June','July','August','September','October','November','December']
+    monthIndex=list(range(0,12))
     def __init__(self):
         super(Ui, self).__init__()
         uic.loadUi('homePage.ui', self)
@@ -45,6 +49,9 @@ class Ui(QtWidgets.QMainWindow):
         self.button = self.findChild(QtWidgets.QPushButton, 'ViewStatsBtn')
         self.button.clicked.connect(self.ViewStatTools)
 
+        self.button = self.findChild(QtWidgets.QPushButton, 'TtestBtn')
+        self.button.clicked.connect(self.performTtestForMonths)
+
         #self.pushButton.clicked.connect(self.window2)
 
         self.show()
@@ -53,7 +60,32 @@ class Ui(QtWidgets.QMainWindow):
         pass
 
     def monthlyKillingsGraph(self):
-        self.plotGraph()
+        monthlyKills=[0]*12 #BWHO
+        with open('killings.csv', 'r') as f:
+            reader = csv.reader(f, delimiter=',')
+            yearSelect=str(self.yearSelector1.currentText())
+            monthCount='1'
+            for row in reader:
+                if monthCount=='10' or monthCount=='11' or monthCount=='12':
+                    nextMonth=monthCount+'/'+yearSelect
+                else:
+                    nextMonth= '0'+monthCount+'/'+yearSelect
+                for m in monthlyKills:
+                    if nextMonth in row[2]:
+                        monthlyKills[int(monthCount)-1]+=1
+                        break
+                    monthCount= str(int(monthCount)+1)
+                    if monthCount=='10' or monthCount=='11' or monthCount=='12':
+                        nextMonth=monthCount+'/'+yearSelect
+                    else:
+                        nextMonth= '0' + monthCount+'/'+yearSelect
+                monthCount='1'
+        print (monthlyKills)
+        self.plotGraph(self.monthIndex,monthlyKills)
+
+    def compareTwoGroups_withTtest(self, arr_1, arr_2):
+        stat, p = ttest_ind(arr_1, arr_2)
+        return p
 
     def ViewStatTools(self):
         #Mean
@@ -72,6 +104,70 @@ class Ui(QtWidgets.QMainWindow):
         #StdDev
         self.lineEdit5.setText(str(round(self.findStd(), 2)))
         print(str(round(self.findStd(), 2)))
+
+    def performTtestForMonths(self):
+        year1=str(self.comboYear.currentText())
+        year2=str(self.comboYear2.currentText())
+        month1=str(self.comboMonth.currentText())
+        month2=str(self.comboMonth2.currentText())
+        file1=year1+'.csv'
+        file2=year2+'.csv'
+        kills1=[]
+        kills2=[]
+        kills1=self.retreiveMonthlyKills(month1, file1)
+        kills2=self.retreiveMonthlyKills(month2, file2)
+        print ('months check: ', kills1, kills2)
+        stat, p = ttest_ind(kills1, kills2)
+        text='The probability of the events being same: '+str(round(p, 2))
+        if p>0.05:
+            text+=' Based on the T-test, we say that the events are likely to be different'
+        elif p<=0.05:
+            text+= ' Based on the T-test, so we say that the events are not likely to be same'
+        self.textEdit1.clear()
+        self.textEdit1.insertPlainText(text)
+        print (text)
+
+
+    def retreiveMonthlyKills(self,month, filename):
+        print (month, filename)
+        monthlyKills=[0]* 30
+        with open(filename,encoding = "ISO-8859-1") as File:
+            csvReader = csv.reader(File)
+            next(csvReader)
+            for row in csvReader:
+                if row[6]==month and int(row[7])<=30:
+                    monthlyKills[int(row[7])-1]+=1
+        print ('monthlyKills for ', month , filename , ': ', monthlyKills)
+        return monthlyKills
+
+    def findYearlyKills(self, filename):
+        months=['January','February','March','April','May','June','July','August','September','October','November','December']
+        KillingList=[]
+        kills=0
+        with open(filename,encoding = "ISO-8859-1") as File:
+            csvReader = csv.reader(File)
+            next(csvReader)
+            for mon in months:
+                with open(filename,encoding = "ISO-8859-1") as File:
+                    csvReader = csv.reader(File)
+                    next(csvReader)
+                    for row in csvReader:
+                        if row[6]==mon:
+                            kills+=1
+                    KillingList.append(kills)
+                    kills=0
+        return KillingList
+
+    def PerformTtestForYears(self):
+        killings15=[]
+        killings16=[]
+        d = os.path.dirname(__file__) # directory of script
+        path1 = r'{}/CSVfiles/2015.csv'.format(d) # path to be created
+        path2 = r'{}/CSVfiles/2016.csv'.format(d) # path to be created
+        killings15= self.findYearlyKills(path1)
+        killings16= self.findYearlyKills(path2)
+        print ('killings: ', killings15, killings16)
+        self.compareTwoGroups_withTtest(killings15, killings16)
 
     def findMean(self):
         values=[]
@@ -304,30 +400,15 @@ class Ui(QtWidgets.QMainWindow):
         chartView = QChartView(chart)
         self.w.setCentralWidget(chartView)
 
-    def plotGraph(self):
+    def plotGraph(self, axisX, axisY):
         self.w = Window2()
         self.w.show()
         self.w.graphWidget = pg.PlotWidget()
         self.w.setCentralWidget(self.w.graphWidget)
-        monthlyKills=[0,0,0,0] #BWHO
-        with open('killings.csv', 'r') as f:
-            reader = csv.reader(f, delimiter=',')
-            for row in reader:
-                if '01/15' in row[2]:
-                    monthlyKills[0]+=1
-                elif '02/15' in row[2]:
-                    monthlyKills[1]+=1
-                elif '03/15' in row[2]:
-                    monthlyKills[2]+=1
-                elif '04/15' in row[2]:
-                    monthlyKills[3]+=1
-        Months = [1,2,3,4]
-        print (monthlyKills, Months)
         # plot data: x, y values
         self.w.graphWidget.setBackground('w')
-        pen = pg.mkPen(color=(255, 0, 0))
-        self.w.graphWidget.plot(Months, monthlyKills, pen=pen)
-
+        pen = pg.mkPen(color=(255, 0, 0), width=15, style=QtCore.Qt.DashLine)
+        self.w.graphWidget.plot(axisX, axisY, symbol='+', symbolSize=30, symbolBrush=('b'))
 
     def raceBarChart(self):
         janKills=[0,0,0,0] #BWHO
