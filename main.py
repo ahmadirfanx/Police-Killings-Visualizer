@@ -52,12 +52,57 @@ class Ui(QtWidgets.QMainWindow):
         self.button = self.findChild(QtWidgets.QPushButton, 'TtestBtn')
         self.button.clicked.connect(self.performTtestForMonths)
 
+        self.button = self.findChild(QtWidgets.QPushButton, 'anovabtn')
+        self.button.clicked.connect(self.performAnova)
         #self.pushButton.clicked.connect(self.window2)
 
         self.show()
 
-    def pressed(self):
-        pass
+    def performAnova(self):
+        s1=self.getStateFromCombo(self.state1.currentText())
+        s2=self.getStateFromCombo(self.state2.currentText())
+        s3=self.getStateFromCombo(self.state3.currentText())
+        print (s1,s2,s3)
+        state1=[]
+        state2=[]
+        state3=[]
+        s1Count=0
+        s2Count=0
+        s3Count=0
+        with open('killings.csv') as File:
+            csvReader = csv.reader(File)
+            next(csvReader)
+            for row in csvReader:
+                if row[9]==s1 and s1Count<10:
+                    state1.append(int(row[5]))
+                    s1Count+=1
+                if row[9]==s2 and s2Count<10:
+                    state2.append(int(row[5]))
+                    s2Count+=1
+                if row[9]==s3 and s3Count<10:
+                    state3.append(int(row[5]))
+                    s3Count+=1
+        f,p = stats.f_oneway(state1, state2, state3)
+        print (f,p)
+        text='The probability of the events being same is: '+str(round(p, 2))
+        if p>0.05:
+            text+=' Based on the ANOVA test, We can not reject the Null hypothesis and say that the events are same'
+        elif p<=0.05:
+            text+= ' Based on the ANOVA test, we can reject the null hypothesis and can say that the events are different'
+        self.tEdit.clear()
+        self.tEdit.insertPlainText(text)
+
+    def getStateFromCombo(self, word):
+        if word=='Arizona':
+            return 'AZ'
+        if word=='California':
+            return 'CA'
+        if word=='Florida':
+            return 'FL'
+        if word=='Texas':
+            return 'TX'
+        if word=='Ohio':
+            return 'OH'
 
     def monthlyKillingsGraph(self):
         monthlyKills=[0]*12 #BWHO
@@ -120,9 +165,9 @@ class Ui(QtWidgets.QMainWindow):
         stat, p = ttest_ind(kills1, kills2)
         text='The probability of the events being same: '+str(round(p, 2))
         if p>0.05:
-            text+=' Based on the T-test, we say that the events are likely to be different'
+            text+=' Based on the T-test, we can say that the events are likely to be different'
         elif p<=0.05:
-            text+= ' Based on the T-test, so we say that the events are not likely to be same'
+            text+= ' Based on the T-test, we say that the events are not likely to be same'
         self.textEdit1.clear()
         self.textEdit1.insertPlainText(text)
         print (text)
